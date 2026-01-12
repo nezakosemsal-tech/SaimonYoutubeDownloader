@@ -57,7 +57,7 @@ class YouTubeDownloader:
                 ydl_opts['format'] = 'worst'
             else:
                 # Remove 'p' suffix if present (e.g., '720p' -> '720')
-                quality_num = quality.rstrip('p')
+                quality_num = quality[:-1] if quality.endswith('p') else quality
                 ydl_opts['format'] = f'bestvideo[height<={quality_num}]+bestaudio/best[height<={quality_num}]'
         
         try:
@@ -77,8 +77,17 @@ class YouTubeDownloader:
                 print("\n✓ Download completed successfully!")
                 print(f"Files saved to: {self.output_dir.absolute()}")
                 
+        except yt_dlp.utils.DownloadError as e:
+            print(f"\n✗ Download error: {str(e)}", file=sys.stderr)
+            sys.exit(1)
+        except yt_dlp.utils.ExtractorError as e:
+            print(f"\n✗ Error extracting video information: {str(e)}", file=sys.stderr)
+            sys.exit(1)
+        except KeyboardInterrupt:
+            print("\n\n✗ Download cancelled by user", file=sys.stderr)
+            sys.exit(1)
         except Exception as e:
-            print(f"\n✗ Error during download: {str(e)}", file=sys.stderr)
+            print(f"\n✗ Unexpected error: {str(e)}", file=sys.stderr)
             sys.exit(1)
     
     def _progress_hook(self, d):
