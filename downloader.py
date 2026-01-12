@@ -35,8 +35,11 @@ class YouTubeDownloader:
         
         Args:
             url: YouTube URL (video, mix, or playlist)
-            audio_only: If True, download only audio
+            audio_only: If True, download only audio (requires FFmpeg)
             quality: Video quality (best, worst, or specific resolution)
+        
+        Note:
+            Audio extraction requires FFmpeg to be installed on the system.
         """
         ydl_opts = {
             'outtmpl': str(self.output_dir / '%(title)s.%(ext)s'),
@@ -71,7 +74,8 @@ class YouTubeDownloader:
                 else:
                     print(f"\nDownloading: {info.get('title', 'Unknown')}")
                     duration = info.get('duration') or 0
-                    print(f"Duration: {duration // 60} minutes\n")
+                    duration_str = f"{duration // 60} minutes" if duration > 0 else "Unknown duration"
+                    print(f"Duration: {duration_str}\n")
                 
                 ydl.download([url])
                 print("\n✓ Download completed successfully!")

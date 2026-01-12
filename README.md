@@ -111,6 +111,12 @@ optional arguments:
 
 - Python 3.6+
 - yt-dlp
+- FFmpeg (optional, required only for audio extraction with `-a` flag)
+
+**Note:** If you plan to use the audio-only download feature (`-a` flag), you need to have FFmpeg installed on your system. You can install it via:
+- **Ubuntu/Debian:** `sudo apt install ffmpeg`
+- **macOS:** `brew install ffmpeg`
+- **Windows:** Download from [ffmpeg.org](https://ffmpeg.org/download.html)
 
 ## License
 
