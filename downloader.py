@@ -56,7 +56,9 @@ class YouTubeDownloader:
             elif quality == "worst":
                 ydl_opts['format'] = 'worst'
             else:
-                ydl_opts['format'] = f'bestvideo[height<={quality}]+bestaudio/best[height<={quality}]'
+                # Remove 'p' suffix if present (e.g., '720p' -> '720')
+                quality_num = quality.rstrip('p')
+                ydl_opts['format'] = f'bestvideo[height<={quality_num}]+bestaudio/best[height<={quality_num}]'
         
         try:
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -68,7 +70,8 @@ class YouTubeDownloader:
                     print("Starting download...\n")
                 else:
                     print(f"\nDownloading: {info.get('title', 'Unknown')}")
-                    print(f"Duration: {info.get('duration', 0) // 60} minutes\n")
+                    duration = info.get('duration') or 0
+                    print(f"Duration: {duration // 60} minutes\n")
                 
                 ydl.download([url])
                 print("\n✓ Download completed successfully!")
